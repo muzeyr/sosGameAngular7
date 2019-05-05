@@ -1,0 +1,27 @@
+
+.game-area {
+    margin-top: 25px;
+	width: 450px;
+}
+
+.tick-tack-grid {
+	
+	div mat-grid-tile {
+        cursor: pointer;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+      
+        
+        i.material-icons.tick {
+            color: green;
+        }
+        
+        i.material-icons.cross {
+            color: red;
+        }
+		
+	}
+
+}
