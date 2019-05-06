@@ -1,32 +1,32 @@
 <div class="container">
 
   <div class="row">
-  
+
     <div class="col-md-12">
       <div class="game-area">
         <mat-grid-list class="tick-tack-grid" cols="10">
-          <mat-grid-tile *ngFor="let block of apiService.blocks; let i = index; trackBy: trackByFn">
-            <div class="row" *ngIf="block.free">
-                <div class="col-md-6">
-                <i  (click)="playerClickSos(i,'S')" > S</i>   
-                </div>
-
-                <div class="col-md-6"  >
-                    <i  (click)="playerClickSos(i,'O')"> O</i>   
-                     
-                  </div>
-                 
-            </div> 
-             
-            <i  *ngIf="block.SOS === 'S'">S</i>
-            <i *ngIf="block.SOS === 'O'">O</i>
+          <mat-grid-tile *ngFor="let block of apiService.blocks; let i = index; trackBy: trackByFn"  >
+            <div class="row" *ngIf="block.free" style="getStyle()">
+              <div class="col-md-6" >
+                <i (click)="playerClickSos(i,'S')">S</i>
+              </div>
+              <div class="col-md-6">
+                <i (click)="playerClickSos(i,'O')"> O</i>
+              </div>
+            </div>
+            <div  *ngIf="!block.free" [class]="block.SOS === 'S' ? 'red' : 'yellow'" >
+              <div >
+                <i *ngIf="block.SOS === 'S'">S</i>
+                <i *ngIf="block.SOS === 'O'">O</i>
+              </div>
+            </div>
+            {{i}}
           </mat-grid-tile>
         </mat-grid-list>
       </div>
-    </div> 
-  
+    </div>
+
   </div>
-    
-  
-  </div>
-  
+
+
+</div>

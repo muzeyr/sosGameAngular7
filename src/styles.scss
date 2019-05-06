@@ -3,7 +3,13 @@
     margin-top: 25px;
 	width: 450px;
 }
+.red{ 
+    font-size: 30px!important;
+}
+.yellow{ 
+    font-size: 30px!important;
 
+}
 .tick-tack-grid {
 	
 	div mat-grid-tile {
@@ -21,6 +27,8 @@
         i.material-icons.cross {
             color: red;
         }
+
+
 		
 	}
 

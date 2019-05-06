@@ -1,12 +1,9 @@
-import { Component } from '@angular/core';
-
+import { Component,ElementRef } from '@angular/core';
 import { Player } from './entity/player';
 import { Block } from './entity/block';
 import { ApiService  } from './services/api.service';
-
-
-console.log('>><<<')
 import { MatGridListModule } from '@angular/material';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,11 +12,13 @@ import { MatGridListModule } from '@angular/material';
 
 })
 
-export class AppComponent {
+export class AppComponent { 
   title = 'app';
 	lock = false;
-  constructor(public apiService: ApiService, public snackBar: MatGridListModule) {
-		
+	private el: HTMLElement;
+
+  constructor(public apiService: ApiService, public snackBar: MatGridListModule,el: ElementRef) {
+		 this.el = el.nativeElement; 
 	}
   newGame() {
 		this.apiService.freeBlocksRemaining = 9;
@@ -28,6 +27,9 @@ export class AppComponent {
 		this.apiService.turn = 0;
 	}
 
+	getStyle(){
+		return "red"
+	}
 	resetGame(event) {
 		location.reload();
 		event.preventDefault();
@@ -74,51 +76,7 @@ export class AppComponent {
 		    this.newGame();
 		    return;
 		}
-  }
-	playerClick(i) {
-    console.log('>>')
-		if( this.apiService.blocks[i].free == false || this.lock == true ) { // If Block is already fill, don't Do anything
-			return;
-		}
-
-		this.apiService.freeBlocksRemaining -= 1; // Reduce no. of free blocks after each selection
-
-		if( this.apiService.freeBlocksRemaining <= 0 ) {
-
-			this.apiService.draw += 1;
-			this.lock = true;
-			 
-			this.newGame();
-			return;
-		}
-
-
-		this.apiService.blocks[i].free = false;
-
-		if( this.apiService.turn == 0 ) { // Player1 Turn
-			this.apiService.blocks[i].setValue("tick");
-		
-		} else { // Bot Turn
-			this.apiService.blocks[i].setValue("cross");	
-		}
-
-		var complete = this.apiService.blockSetComplete();
-
-		if( complete == false ) {
-			this.changeTurn();	
-			return;
-			
-		} else {
-			this.lock = true;
-			this.apiService.players[this.apiService.turn].score += 1;
- 
-
-		    this.newGame();
-		    return;
-		}
-		
-	}
-
+  } 
 
 	botTurn() {
 
@@ -129,7 +87,7 @@ export class AppComponent {
 		var bot_selected = this.apiService.figureBotMove()-1;
 		
 		if( this.apiService.blocks[bot_selected].free == true ) {
-			this.playerClick(bot_selected);	
+			this.playerClickSos(bot_selected,'S');	
 		} else {
 			this.botTurn();
 			return;
