@@ -58,13 +58,13 @@ export class ApiService {
 		// Player1
 		var player1 = new Player();
 		player1.bot = false;
-		player1.name= 'MOZCAN';
+		player1.name= 'UZEYR';
 		player1.score = 0;
 		player1.order = true;
 		player1.style ='win';
 
 		var player2 = new Player();
-		player2.name= 'SNN';
+		player2.name= 'OZCAN';
 		player2.score = 0;
 		player2.style ='win2';
 		player2.order = false;
