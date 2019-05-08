@@ -1,10 +1,12 @@
 import { Component,ElementRef } from '@angular/core';
 import { Player } from './entity/player';
 import { Block } from './entity/block';
-import { ApiService  } from './services/api.service';
-import { MatGridListModule } from '@angular/material';
+import { ApiService  } from './services/api.service'; 
+import {MatButtonModule,MatIconModule,MatGridListModule} from '@angular/material'
+import { HttpClient } from '@angular/common/http';
+import { PlayerBlock } from './entity/playerBlock';
 
-@Component({
+@Component({ 
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -15,94 +17,54 @@ import { MatGridListModule } from '@angular/material';
 export class AppComponent { 
   title = 'app';
 	lock = false;
+	satir = 9;
+	block : Block[]; 
 	private el: HTMLElement;
 
-  constructor(public apiService: ApiService, public snackBar: MatGridListModule,el: ElementRef) {
-		 this.el = el.nativeElement; 
+	
+  constructor(public apiService: ApiService, public snackBar: MatGridListModule,el: ElementRef,private http: HttpClient) {
+		 this.el = el.nativeElement;  
 	}
   newGame() {
-		this.apiService.freeBlocksRemaining = 9;
+		this.apiService.freeBlocksRemaining = 99;
 		this.apiService.initBlocks();
 		this.lock = false;
 		this.apiService.turn = 0;
 	}
+	playerBlockSet(blocks,players){
+		var tht = this;
+		this.apiService.playerBlockSet(blocks,players) .subscribe(
+			function(response) { 
+				console.log('>>');
+				tht.apiService.blocks = response.blockList;
+				tht.apiService.players[tht.apiService.turn] = response.player;
+				tht.apiService.changeTurn();
+				
+			},
+			function(error) { console.log("Error happened" + error)},
+			function() { console.log("the subscription is completed")}
+		);
+		
 
-	getStyle(){
-		return "red"
 	}
+  
 	resetGame(event) {
 		location.reload();
 		event.preventDefault();
 	}
-  playerClickSos(i,val){
-    console.log('>><<<')
-		if( this.apiService.blocks[i].free == false || this.lock == true ) { // If Block is already fill, don't Do anything
+  playerClickSos(i,val){  
+		console.log('>>');
+		if( this.apiService.blocks[i].free == false || this.lock == true ) {  
 			return;
 		}
+ 		this.apiService.blocks[i].free = false;
+		this.apiService.blocks[i].val  = val;
 
-		this.apiService.freeBlocksRemaining -= 1; // Reduce no. of free blocks after each selection
-
-		if( this.apiService.freeBlocksRemaining <= 0 ) {
-
-			this.apiService.draw += 1;
-			this.lock = true;
-			 
-			this.newGame();
-			return;
-		}
-
-
-		this.apiService.blocks[i].free = false;
-		this.apiService.blocks[i].SOS = val;
-    
-		if( this.apiService.turn == 0 ) { // Player1 Turn
-			this.apiService.blocks[i].setValue("");
-		
-		} else { // Bot Turn
-			this.apiService.blocks[i].setValue("cross");	
-		}
-
-		var complete = this.apiService.blockSetComplete();
-
-		if( complete == false ) {
-			this.changeTurn();	
-			return;
-			
-		} else {
-			this.lock = true;
-			this.apiService.players[this.apiService.turn].score += 1;
+		this.playerBlockSet(this.apiService.blocks,this.apiService.playersTurn());
+	
+		this.apiService.freeBlocksRemaining -= 1;  
  
-
-		    this.newGame();
-		    return;
-		}
-  } 
-
-	botTurn() {
-
-		if( this.apiService.freeBlocksRemaining <= 0 ) {
-			return;
-		}
-
-		var bot_selected = this.apiService.figureBotMove()-1;
 		
-		if( this.apiService.blocks[bot_selected].free == true ) {
-			this.playerClickSos(bot_selected,'S');	
-		} else {
-			this.botTurn();
-			return;
-		}
-
-	}
-
-
-	changeTurn() {
-		var player = this.apiService.changeTurn();
-
-		if( player == 1 ) { // Bot Turn
-			this.botTurn();
-		
-		}
-	}
+  }
 
 }

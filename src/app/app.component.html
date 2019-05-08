@@ -1,32 +1,53 @@
 <div class="container">
+  <div class="game-area">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title>
+          {{apiService.turn+1}}. Player
+        </mat-card-title>
 
-  <div class="row">
+      </mat-card-header>
+      <mat-card-content>
+        <div class="game-area-main">
+          <mat-grid-list class="sos" cols="10">
+            <mat-grid-tile *ngFor="let block of apiService.blocks; let i = index; trackBy: trackByFn">
 
-    <div class="col-md-12">
-      <div class="game-area">
-        <mat-grid-list class="tick-tack-grid" cols="10">
-          <mat-grid-tile *ngFor="let block of apiService.blocks; let i = index; trackBy: trackByFn"  >
-            <div class="row" *ngIf="block.free" style="getStyle()">
-              <div class="col-md-6" >
-                <i (click)="playerClickSos(i,'S')">S</i>
+              <div *ngIf="block.free">
+                <button mat-raised-button color="warn" (click)="playerClickSos(i,'S')">S</button>
+                <button mat-raised-button color="accent" (click)="playerClickSos(i,'O')">O</button>
               </div>
-              <div class="col-md-6">
-                <i (click)="playerClickSos(i,'O')"> O</i>
+              <div [class]="block.style">
+                <div *ngIf="!block.free">
+                  <a mat-mini-fab *ngIf="block.val === 'S'">S</a>
+                  <a mat-mini-fab *ngIf="block.val === 'O'">O</a>
+
+                </div>
               </div>
-            </div>
-            <div  *ngIf="!block.free" [class]="block.SOS === 'S' ? 'red' : 'yellow'" >
-              <div >
-                <i *ngIf="block.SOS === 'S'">S</i>
-                <i *ngIf="block.SOS === 'O'">O</i>
-              </div>
-            </div>
-            {{i}}
-          </mat-grid-tile>
-        </mat-grid-list>
-      </div>
-    </div>
+
+            </mat-grid-tile>
+          </mat-grid-list>
+
+        </div>
+      </mat-card-content>
+
+    </mat-card>
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title *ngFor="let player of apiService.players;">
+          {{player.name}}- {{player.score}}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button (click)="newGame()">New Game</button>
+        <button mat-button (click)="resetGame()">Reset</button>
+      </mat-card-actions>
+    </mat-card>
+
 
   </div>
-
-
 </div>
